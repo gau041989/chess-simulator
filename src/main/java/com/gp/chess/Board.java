@@ -2,6 +2,7 @@ package com.gp.chess;
 
 import com.gp.chess.movement.MovementStrategy;
 import com.gp.chess.movement.PawnMovementStrategy;
+import com.gp.chess.movement.RookMovementStrategy;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.function.Predicate;
 
 public class Board {
 
-  private Map<Position, Piece> piecePositions = new HashMap<>();
+  private final Map<Position, Piece> piecePositions = new HashMap<>();
   private final Map<PieceType, MovementStrategy> pieceMovementStrategies;
 
   private final Predicate<Position> canOccupy = position -> !piecePositions.containsKey(position);
@@ -24,6 +25,7 @@ public class Board {
     this.piecePositions.putAll(piecePositions);
     this.pieceMovementStrategies = new HashMap<>() {{
       put(PieceType.PAWN, new PawnMovementStrategy(canOccupy, canKill));
+      put(PieceType.ROOK, new RookMovementStrategy(canOccupy, canKill));
     }};
   }
 
