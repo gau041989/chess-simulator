@@ -3,6 +3,7 @@ package com.gp.chess;
 import com.gp.chess.movement.BishopMovementStrategy;
 import com.gp.chess.movement.MovementStrategy;
 import com.gp.chess.movement.PawnMovementStrategy;
+import com.gp.chess.movement.QueenMovementStrategy;
 import com.gp.chess.movement.RookMovementStrategy;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,9 +26,13 @@ public class Board {
   private Board(Map<Position, Piece> piecePositions) {
     this.piecePositions.putAll(piecePositions);
     this.pieceMovementStrategies = new HashMap<>() {{
+      RookMovementStrategy rookMovementStrategy = new RookMovementStrategy(canOccupy, canKill);
+      BishopMovementStrategy bishopMovementStrategy = new BishopMovementStrategy(canOccupy, canKill);
+
       put(PieceType.PAWN, new PawnMovementStrategy(canOccupy, canKill));
-      put(PieceType.ROOK, new RookMovementStrategy(canOccupy, canKill));
-      put(PieceType.BISHOP, new BishopMovementStrategy(canOccupy, canKill));
+      put(PieceType.ROOK, rookMovementStrategy);
+      put(PieceType.BISHOP, bishopMovementStrategy);
+      put(PieceType.QUEEN, new QueenMovementStrategy(canOccupy, canKill, rookMovementStrategy, bishopMovementStrategy));
     }};
   }
 

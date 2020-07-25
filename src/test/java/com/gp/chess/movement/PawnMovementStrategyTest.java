@@ -173,7 +173,7 @@ class PawnMovementStrategyTest {
     List<Position> possibleMoves = strategy.getPossibleMoves(new Piece(color, PAWN), position);
 
     assertThat(possibleMoves.size()).isEqualTo(expectedMoves.size());
-    expectedMoves.forEach(move -> assertThat(possibleMoves.contains(move)));
+    expectedMoves.forEach(move -> assertThat(possibleMoves.contains(move)).isTrue());
   }
 
 }

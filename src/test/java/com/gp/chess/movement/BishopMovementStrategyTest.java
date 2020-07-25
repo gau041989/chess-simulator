@@ -99,6 +99,6 @@ class BishopMovementStrategyTest {
     List<Position> possibleMoves = strategy.getPossibleMoves(new Piece(WHITE, BISHOP), position);
 
     assertThat(possibleMoves.size()).isEqualTo(expectedMoves.size());
-    expectedMoves.forEach(move -> assertThat(possibleMoves.contains(move)));
+    expectedMoves.forEach(move -> assertThat(possibleMoves.contains(move)).isTrue());
   }
 }

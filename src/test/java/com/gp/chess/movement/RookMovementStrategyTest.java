@@ -99,7 +99,7 @@ class RookMovementStrategyTest {
     List<Position> possibleMoves = strategy.getPossibleMoves(new Piece(BLACK, ROOK), position);
 
     assertThat(possibleMoves.size()).isEqualTo(expectedMoves.size());
-    expectedMoves.forEach(move -> assertThat(possibleMoves.contains(move)));
+    expectedMoves.forEach(move -> assertThat(possibleMoves.contains(move)).isTrue());
   }
 
 }
