@@ -3,19 +3,19 @@ package com.gp.chess;
 import java.util.Objects;
 
 public class Position {
-  private final Column column;
-  private final Row row;
+  private final Traversal<Column> column;
+  private final Traversal<Row> row;
 
-  public Position(Column column, Row row) {
+  public Position(Traversal<Column> column, Traversal<Row> row) {
     this.column = column;
     this.row = row;
   }
 
-  public Column getColumn() {
+  public Traversal<Column> getColumn() {
     return column;
   }
 
-  public Row getRow() {
+  public Traversal<Row> getRow() {
     return row;
   }
 

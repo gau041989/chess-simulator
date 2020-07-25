@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-public enum Row {
+public enum Row implements Traversal<Row> {
   ONE(1),
   TWO(2),
   THREE(3),
@@ -30,13 +30,13 @@ public enum Row {
   private static final Map<Integer, Row> LOOK_UP = Arrays.stream(values())
       .collect(toMap(Row::getValue, Function.identity()));
 
-  public Optional<Row> next() {
+  public Optional<Traversal<Row>> next() {
     return LOOK_UP.containsKey(this.getValue() + 1)
         ? Optional.of(LOOK_UP.get(this.getValue() + 1))
         : Optional.empty();
   }
 
-  public Optional<Row> prev() {
+  public Optional<Traversal<Row>> prev() {
     return LOOK_UP.containsKey(this.getValue() - 1)
         ? Optional.of(LOOK_UP.get(this.getValue() - 1))
         : Optional.empty();

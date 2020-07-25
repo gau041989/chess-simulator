@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-public enum Column {
+public enum Column implements Traversal<Column> {
   A(1),
   B(2),
   C(3),
@@ -30,13 +30,13 @@ public enum Column {
   private static final Map<Integer, Column> LOOK_UP = Arrays.stream(values())
       .collect(toMap(Column::getValue, Function.identity()));
 
-  public Optional<Column> next() {
+  public Optional<Traversal<Column>> next() {
     return LOOK_UP.containsKey(this.getValue() + 1)
         ? Optional.of(LOOK_UP.get(this.getValue() + 1))
         : Optional.empty();
   }
 
-  public Optional<Column> prev() {
+  public Optional<Traversal<Column>> prev() {
     return LOOK_UP.containsKey(this.getValue() - 1)
         ? Optional.of(LOOK_UP.get(this.getValue() - 1))
         : Optional.empty();
