@@ -67,4 +67,27 @@ class BoardTest {
     assertThat(possibleMoves.contains(new Position(F, FOUR)));
     assertThat(possibleMoves.contains(new Position(D, THREE)));
   }
+
+  @Test
+  public void givenAFilledBoard_shouldComputePossiblePositionsForBishop() {
+    Position initialPosition = new Position(D, FOUR);
+    Piece bishop = new Piece(WHITE, BISHOP);
+    Board board = new BoardBuilder()
+        .withPiece(bishop, initialPosition)
+        .withPiece(new Piece(BLACK, ROOK), new Position(F, SIX))
+        .withPiece(new Piece(BLACK, BISHOP), new Position(B, SIX))
+        .withPiece(new Piece(WHITE, PAWN), new Position(F, TWO))
+        .withPiece(new Piece(WHITE, QUEEN), new Position(B, TWO))
+        .build();
+
+    List<Position> possibleMoves = board.getPossibleMoves(bishop, initialPosition);
+
+    assertThat(possibleMoves.size()).isEqualTo(6);
+    assertThat(possibleMoves.contains(new Position(E, FIVE)));
+    assertThat(possibleMoves.contains(new Position(F, SIX)));
+    assertThat(possibleMoves.contains(new Position(C, FIVE)));
+    assertThat(possibleMoves.contains(new Position(B, SIX)));
+    assertThat(possibleMoves.contains(new Position(C, THREE)));
+    assertThat(possibleMoves.contains(new Position(E, THREE)));
+  }
 }

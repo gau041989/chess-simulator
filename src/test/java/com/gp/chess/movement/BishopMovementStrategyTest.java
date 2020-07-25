@@ -1,6 +1,6 @@
 package com.gp.chess.movement;
 
-import static com.gp.chess.Color.BLACK;
+import static com.gp.chess.Color.WHITE;
 import static com.gp.chess.Column.A;
 import static com.gp.chess.Column.B;
 import static com.gp.chess.Column.C;
@@ -9,7 +9,7 @@ import static com.gp.chess.Column.E;
 import static com.gp.chess.Column.F;
 import static com.gp.chess.Column.G;
 import static com.gp.chess.Column.H;
-import static com.gp.chess.PieceType.ROOK;
+import static com.gp.chess.PieceType.BISHOP;
 import static com.gp.chess.Row.EIGHT;
 import static com.gp.chess.Row.FIVE;
 import static com.gp.chess.Row.FOUR;
@@ -33,11 +33,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-class RookMovementStrategyTest {
+class BishopMovementStrategyTest {
 
   private static Stream<Arguments> getData() {
-    List<Position> occupiedCells = asList(new Position(D, SIX), new Position(D, TWO), new Position(G, FOUR),
-        new Position(B, FOUR));
+    List<Position> occupiedCells = asList(new Position(G, SEVEN), new Position(B, TWO), new Position(B, SIX),
+        new Position(F, TWO));
+
     return Stream.of(
         Arguments.of(
             "Empty Board",
@@ -45,10 +46,10 @@ class RookMovementStrategyTest {
             canOccupyFn.apply(true),
             canKillFn.apply(true),
             asList(
-                new Position(D, FIVE), new Position(D, SIX), new Position(D, SEVEN), new Position(D, EIGHT),
-                new Position(D, THREE), new Position(D, TWO), new Position(D, ONE),
-                new Position(C, FOUR), new Position(B, FOUR), new Position(A, FOUR),
-                new Position(E, FOUR), new Position(F, FOUR), new Position(G, FOUR), new Position(H, FOUR)
+                new Position(E, FIVE), new Position(F, SIX), new Position(G, SEVEN), new Position(H, EIGHT),
+                new Position(C, THREE), new Position(B, TWO), new Position(A, ONE),
+                new Position(C, FIVE), new Position(B, SIX), new Position(A, SEVEN),
+                new Position(E, THREE), new Position(F, TWO), new Position(G, ONE)
             )
         ),
         Arguments.of(
@@ -57,10 +58,10 @@ class RookMovementStrategyTest {
             canOccupyPositionsFn.apply(occupiedCells),
             canKillFn.apply(true),
             asList(
-                new Position(D, FIVE), new Position(D, SIX),
-                new Position(D, THREE), new Position(D, TWO),
-                new Position(C, FOUR), new Position(B, FOUR),
-                new Position(E, FOUR), new Position(F, FOUR), new Position(G, FOUR)
+                new Position(E, FIVE), new Position(F, SIX), new Position(G, SEVEN),
+                new Position(C, THREE), new Position(B, TWO),
+                new Position(C, FIVE), new Position(B, SIX),
+                new Position(E, THREE), new Position(F, TWO)
             )
         ),
         Arguments.of(
@@ -69,10 +70,10 @@ class RookMovementStrategyTest {
             canOccupyPositionsFn.apply(occupiedCells),
             cantKillPositionsFn.apply(occupiedCells),
             asList(
-                new Position(D, FIVE),
-                new Position(D, THREE),
-                new Position(C, FOUR),
-                new Position(E, FOUR), new Position(F, FOUR)
+                new Position(E, FIVE), new Position(F, SIX),
+                new Position(C, THREE),
+                new Position(C, FIVE),
+                new Position(E, THREE)
             )
         )
     );
@@ -88,18 +89,16 @@ class RookMovementStrategyTest {
   private static Function<List<Position>, BiPredicate<Piece, Position>> cantKillPositionsFn =
       positions -> (piece, position) -> !positions.contains(position);
 
-
-  @ParameterizedTest(name = "Rook on {0}")
+  @ParameterizedTest(name = "Bishop on {0}")
   @MethodSource("getData")
-  @DisplayName("Rook movement strategy")
-  public void givenARookPosition_shouldComputePossibleMoves(String scenario, Position position, Predicate<Position> canOccupy,
+  @DisplayName("Bishop movement strategy")
+  public void givenABishopPosition_shouldComputePossibleMoves(String scenario, Position position, Predicate<Position> canOccupy,
       BiPredicate<Piece, Position> canKill, List<Position> expectedMoves) {
-    RookMovementStrategy strategy = new RookMovementStrategy(canOccupy, canKill);
+    BishopMovementStrategy strategy = new BishopMovementStrategy(canOccupy, canKill);
 
-    List<Position> possibleMoves = strategy.getPossibleMoves(new Piece(BLACK, ROOK), position);
+    List<Position> possibleMoves = strategy.getPossibleMoves(new Piece(WHITE, BISHOP), position);
 
     assertThat(possibleMoves.size()).isEqualTo(expectedMoves.size());
     expectedMoves.forEach(move -> assertThat(possibleMoves.contains(move)));
   }
-
 }

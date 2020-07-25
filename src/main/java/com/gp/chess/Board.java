@@ -1,5 +1,6 @@
 package com.gp.chess;
 
+import com.gp.chess.movement.BishopMovementStrategy;
 import com.gp.chess.movement.MovementStrategy;
 import com.gp.chess.movement.PawnMovementStrategy;
 import com.gp.chess.movement.RookMovementStrategy;
@@ -26,6 +27,7 @@ public class Board {
     this.pieceMovementStrategies = new HashMap<>() {{
       put(PieceType.PAWN, new PawnMovementStrategy(canOccupy, canKill));
       put(PieceType.ROOK, new RookMovementStrategy(canOccupy, canKill));
+      put(PieceType.BISHOP, new BishopMovementStrategy(canOccupy, canKill));
     }};
   }
 

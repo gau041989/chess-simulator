@@ -41,9 +41,9 @@ public class RookMovementStrategy extends MovementStrategy {
       Function<Position, Optional<Traversal<T>>> traversalFn,
       BiFunction<Position, Traversal<T>, Position> fromTraversal,
       List<Position> intermediateMoves) {
-    Optional<Traversal<T>> optionalRow = traversalFn.apply(position);
-    if (optionalRow.isPresent()) {
-      Position candidate = fromTraversal.apply(position, optionalRow.get());
+    Optional<Traversal<T>> optionalTraversal = traversalFn.apply(position);
+    if (optionalTraversal.isPresent()) {
+      Position candidate = fromTraversal.apply(position, optionalTraversal.get());
       if (canOccupy.test(candidate)) {
         List<Position> movesTillNow = new ArrayList<>() {{
           addAll(intermediateMoves);
