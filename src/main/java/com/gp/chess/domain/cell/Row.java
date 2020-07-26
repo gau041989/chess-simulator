@@ -41,4 +41,8 @@ public enum Row implements Traversal<Row> {
         ? Optional.of(LOOK_UP.get(this.getValue() - 1))
         : Optional.empty();
   }
+
+  public static Row fromValue(int value) {
+    return LOOK_UP.get(value);
+  }
 }
