@@ -2,6 +2,7 @@ package com.gp.chess;
 
 import com.gp.chess.movement.BishopMovementStrategy;
 import com.gp.chess.movement.KingMovementStrategy;
+import com.gp.chess.movement.KnightMovementStrategy;
 import com.gp.chess.movement.MovementStrategy;
 import com.gp.chess.movement.PawnMovementStrategy;
 import com.gp.chess.movement.QueenMovementStrategy;
@@ -35,6 +36,7 @@ public class Board {
       put(PieceType.BISHOP, bishopMovementStrategy);
       put(PieceType.QUEEN, new QueenMovementStrategy(canOccupy, canKill, rookMovementStrategy, bishopMovementStrategy));
       put(PieceType.KING, new KingMovementStrategy(canOccupy, canKill));
+      put(PieceType.KNIGHT, new KnightMovementStrategy(canOccupy, canKill));
     }};
   }
 

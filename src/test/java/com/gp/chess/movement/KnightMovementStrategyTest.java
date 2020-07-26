@@ -1,21 +1,15 @@
 package com.gp.chess.movement;
 
 import static com.gp.chess.Color.BLACK;
-import static com.gp.chess.Column.A;
-import static com.gp.chess.Column.B;
 import static com.gp.chess.Column.C;
 import static com.gp.chess.Column.D;
 import static com.gp.chess.Column.E;
 import static com.gp.chess.Column.F;
 import static com.gp.chess.Column.G;
-import static com.gp.chess.Column.H;
-import static com.gp.chess.PieceType.ROOK;
-import static com.gp.chess.Row.EIGHT;
+import static com.gp.chess.PieceType.KNIGHT;
 import static com.gp.chess.Row.FIVE;
 import static com.gp.chess.Row.FOUR;
 import static com.gp.chess.Row.ONE;
-import static com.gp.chess.Row.SEVEN;
-import static com.gp.chess.Row.SIX;
 import static com.gp.chess.Row.THREE;
 import static com.gp.chess.Row.TWO;
 import static com.gp.chess.movement.Mocks.canKillFn;
@@ -36,62 +30,57 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-class RookMovementStrategyTest {
+class KnightMovementStrategyTest {
 
   private static Stream<Arguments> getData() {
-    List<Position> occupiedCells = asList(new Position(D, SIX), new Position(D, TWO), new Position(G, FOUR),
-        new Position(B, FOUR));
+    List<Position> occupiedCells = asList(new Position(F, FIVE), new Position(G, FOUR), new Position(G, TWO),
+        new Position(F, ONE));
     return Stream.of(
         Arguments.of(
             "Empty Board",
-            new Position(D, FOUR),
+            new Position(E, THREE),
             canOccupyFn.apply(true),
             canKillFn.apply(true),
             asList(
-                new Position(D, FIVE), new Position(D, SIX), new Position(D, SEVEN), new Position(D, EIGHT),
-                new Position(D, THREE), new Position(D, TWO), new Position(D, ONE),
-                new Position(C, FOUR), new Position(B, FOUR), new Position(A, FOUR),
-                new Position(E, FOUR), new Position(F, FOUR), new Position(G, FOUR), new Position(H, FOUR)
+                new Position(F, FIVE), new Position(G, FOUR), new Position(G, TWO),
+                new Position(F, ONE), new Position(D, ONE), new Position(C, TWO),
+                new Position(C, FOUR), new Position(D, FIVE)
             )
         ),
         Arguments.of(
             "Filled Board with enemies to kill",
-            new Position(D, FOUR),
+            new Position(E, THREE),
             canOccupyPositionsFn.apply(occupiedCells),
             canKillFn.apply(true),
             asList(
-                new Position(D, FIVE), new Position(D, SIX),
-                new Position(D, THREE), new Position(D, TWO),
-                new Position(C, FOUR), new Position(B, FOUR),
-                new Position(E, FOUR), new Position(F, FOUR), new Position(G, FOUR)
+                new Position(F, FIVE), new Position(G, FOUR), new Position(G, TWO),
+                new Position(F, ONE), new Position(D, ONE), new Position(C, TWO),
+                new Position(C, FOUR), new Position(D, FIVE)
             )
         ),
         Arguments.of(
             "Filled Board with friends around",
-            new Position(D, FOUR),
+            new Position(E, THREE),
             canOccupyPositionsFn.apply(occupiedCells),
             cantKillPositionsFn.apply(occupiedCells),
             asList(
-                new Position(D, FIVE),
-                new Position(D, THREE),
-                new Position(C, FOUR),
-                new Position(E, FOUR), new Position(F, FOUR)
+                new Position(D, ONE), new Position(C, TWO),
+                new Position(C, FOUR), new Position(D, FIVE)
             )
         )
     );
   }
 
-  @ParameterizedTest(name = "Rook on {0}")
+  @ParameterizedTest(name = "Knight on {0}")
   @MethodSource("getData")
-  @DisplayName("Rook movement strategy")
-  public void givenARookPosition_shouldComputePossibleMoves(String scenario, Position position, Predicate<Position> canOccupy,
+  @DisplayName("Knight movement strategy")
+  public void givenAKnightPosition_shouldComputePossibleMoves(String scenario, Position position, Predicate<Position> canOccupy,
       BiPredicate<Piece, Position> canKill, List<Position> expectedMoves) {
-    RookMovementStrategy strategy = new RookMovementStrategy(canOccupy, canKill);
+    KnightMovementStrategy strategy = new KnightMovementStrategy(canOccupy, canKill);
 
-    List<Position> possibleMoves = strategy.getPossibleMoves(new Piece(BLACK, ROOK), position);
+    List<Position> possibleMoves = strategy.getPossibleMoves(new Piece(BLACK, KNIGHT), position);
 
     assertThat(possibleMoves.size()).isEqualTo(expectedMoves.size());
     expectedMoves.forEach(move -> assertThat(possibleMoves.contains(move)).isTrue());
   }
-
 }

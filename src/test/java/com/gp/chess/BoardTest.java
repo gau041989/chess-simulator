@@ -16,6 +16,7 @@ import static com.gp.chess.PieceType.QUEEN;
 import static com.gp.chess.PieceType.ROOK;
 import static com.gp.chess.Row.FIVE;
 import static com.gp.chess.Row.FOUR;
+import static com.gp.chess.Row.ONE;
 import static com.gp.chess.Row.SIX;
 import static com.gp.chess.Row.THREE;
 import static com.gp.chess.Row.TWO;
@@ -152,5 +153,28 @@ class BoardTest {
     assertThat(possibleMoves.contains(new Position(C, FOUR))).isTrue();
     assertThat(possibleMoves.contains(new Position(C, FIVE))).isTrue();
     assertThat(possibleMoves.contains(new Position(C, SIX))).isTrue();
+  }
+
+  @Test
+  public void givenAFilledBoard_shouldComputePossiblePositionsForKnight() {
+    Position initialPosition = new Position(E, THREE);
+    Piece knight = new Piece(WHITE, KNIGHT);
+    Board board = new BoardBuilder()
+        .withPiece(knight, initialPosition)
+        .withPiece(new Piece(BLACK, ROOK), new Position(F, FIVE))
+        .withPiece(new Piece(BLACK, BISHOP), new Position(G, FOUR))
+        .withPiece(new Piece(WHITE, PAWN), new Position(G, TWO))
+        .withPiece(new Piece(WHITE, QUEEN), new Position(F, ONE))
+        .build();
+
+    List<Position> possibleMoves = board.getPossibleMoves(knight, initialPosition);
+
+    assertThat(possibleMoves.size()).isEqualTo(6);
+    assertThat(possibleMoves.contains(new Position(F, FIVE))).isTrue();
+    assertThat(possibleMoves.contains(new Position(G, FOUR))).isTrue();
+    assertThat(possibleMoves.contains(new Position(D, ONE))).isTrue();
+    assertThat(possibleMoves.contains(new Position(C, TWO))).isTrue();
+    assertThat(possibleMoves.contains(new Position(C, FOUR))).isTrue();
+    assertThat(possibleMoves.contains(new Position(D, FIVE))).isTrue();
   }
 }

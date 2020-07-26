@@ -18,6 +18,10 @@ import static com.gp.chess.Row.SEVEN;
 import static com.gp.chess.Row.SIX;
 import static com.gp.chess.Row.THREE;
 import static com.gp.chess.Row.TWO;
+import static com.gp.chess.movement.Mocks.canKillFn;
+import static com.gp.chess.movement.Mocks.canOccupyFn;
+import static com.gp.chess.movement.Mocks.canOccupyPositionsFn;
+import static com.gp.chess.movement.Mocks.cantKillPositionsFn;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,7 +29,6 @@ import com.gp.chess.Piece;
 import com.gp.chess.Position;
 import java.util.List;
 import java.util.function.BiPredicate;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -78,16 +81,6 @@ class BishopMovementStrategyTest {
         )
     );
   }
-
-  private static Function<Boolean, Predicate<Position>> canOccupyFn = aBoolean -> position -> aBoolean;
-
-  private static Function<Boolean, BiPredicate<Piece, Position>> canKillFn = aBoolean -> (piece, position) -> aBoolean;
-
-  private static Function<List<Position>, Predicate<Position>> canOccupyPositionsFn =
-      positions -> position -> !positions.contains(position);
-
-  private static Function<List<Position>, BiPredicate<Piece, Position>> cantKillPositionsFn =
-      positions -> (piece, position) -> !positions.contains(position);
 
   @ParameterizedTest(name = "Bishop on {0}")
   @MethodSource("getData")
