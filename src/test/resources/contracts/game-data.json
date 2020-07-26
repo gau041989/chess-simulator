@@ -1,0 +1,12 @@
+{
+  "board": {
+    "A2": {
+      "color": "WHITE",
+      "type": "PAWN",
+      "possibleMoves": [
+        "A3",
+        "A4"
+      ]
+    }
+  }
+}

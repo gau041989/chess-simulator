@@ -53,6 +53,10 @@ public class Board {
     return Collections.emptyList();
   }
 
+  Map<Position, Piece> getPiecePositions() {
+    return Collections.unmodifiableMap(piecePositions);
+  }
+
   public static class BoardBuilder {
 
     private final Map<Position, Piece> piecePositions;
