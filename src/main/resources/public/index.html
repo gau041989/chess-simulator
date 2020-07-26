@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <title>Chess Game</title>
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+<body>
+<div id="chess-game"></div>
+<style>
+  .chessboard {
+    border: 2px solid black;
+    box-sizing: content-box;
+    display: flex;
+    flex-direction: column;
+    height: 40vw;
+    margin: 0 auto;
+    width: 40vw;
+  }
+
+  .row {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+  }
+
+  .white-box {
+    background-color: #ECF9A9;
+    flex: 1;
+  }
+
+  .black-box {
+    background-color: #F6AF35;
+    flex: 1;
+  }
+
+  .selected-box {
+    background-color: #86c2eb;
+    flex: 1;
+  }
+
+  .highlighted-box {
+    box-shadow: 0 0 0 2px black inset;
+  }
+
+  .image-avatar {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+</style>
+
+<script type="text/babel">
+
+  const whiteBox = new Set([
+    'A8', 'C8', 'E8', 'G8',
+    'B7', 'D7', 'F7', 'H7',
+    'A6', 'C6', 'E6', 'G6',
+    'B5', 'D5', 'F5', 'H5',
+    'A4', 'C4', 'E4', 'G4',
+    'B3', 'D3', 'F3', 'H3',
+    'A2', 'C2', 'E2', 'G2',
+    'B1', 'D1', 'F1', 'H1'
+  ]);
+
+  const columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+  const rows = [8, 7, 6, 5, 4, 3, 2, 1];
+
+  class ChessGame extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        board: {
+          A1: {}, B1: {}, C1: {}, D1: {}, E1: {}, F1: {}, G1: {}, H1: {},
+          A2: {}, B2: {}, C2: {}, D2: {}, E2: {}, F2: {}, G2: {}, H2: {},
+          A3: {}, B3: {}, C3: {}, D3: {}, E3: {}, F3: {}, G3: {}, H3: {},
+          A4: {}, B4: {}, C4: {}, D4: {}, E4: {}, F4: {}, G4: {}, H4: {},
+          A5: {}, B5: {}, C5: {}, D5: {}, E5: {}, F5: {}, G5: {}, H5: {},
+          A6: {}, B6: {}, C6: {}, D6: {}, E6: {}, F6: {}, G6: {}, H6: {},
+          A7: {}, B7: {}, C7: {}, D7: {}, E7: {}, F7: {}, G7: {}, H7: {},
+          A8: {}, B8: {}, C8: {}, D8: {}, E8: {}, F8: {}, G8: {}, H8: {}
+        },
+        highlightedKeys: [],
+        selectedKey: ""
+      };
+    }
+
+    componentDidMount() {
+      fetch('http://localhost:8080/v1/game')
+      .then(response => response.json())
+      .then(json => {
+        let state = {};
+        const {board} = json;
+        for (let colIndex in columns) {
+          for (let rowIndex in rows) {
+            const key = columns[colIndex] + rows[rowIndex];
+            const piecePosition = board[key] || {};
+            state[key] = {
+              ...piecePosition
+            }
+          }
+        }
+        this.setState({
+          board: {
+            ...state
+          }
+        });
+      });
+    }
+
+    onClick(item, key) {
+      this.setState({
+        highlightedKeys: [...item.possibleMoves],
+        selectedKey: key
+      })
+    }
+
+    render() {
+      const {board, highlightedKeys, selectedKey} = this.state;
+
+      return (
+          <div className="chessboard">
+            {
+              rows.map(row => {
+                return (
+                    <div className="row">
+                      {
+                        columns.map(col => {
+                          const key = col + row;
+                          const item = board[key];
+                          const boxStyle = selectedKey === key
+                              ? 'selected-box'
+                              : whiteBox.has(key)
+                                  ? 'white-box'
+                                  : 'black-box';
+                          const withHighlight = highlightedKeys.includes(key)
+                              ? `${boxStyle} highlighted-box`
+                              : boxStyle;
+
+                          return (
+                              <div key={key} className={withHighlight} onClick={() => this.onClick(item, key)}>
+                                {
+                                  item.color && item.type
+                                  && (<img className="image-avatar" src={`images/${item.color}_${item.type}.svg`}/>)
+                                }
+                              </div>
+                          );
+                        })
+                      }
+                    </div>
+                );
+              })
+            }
+          </div>
+      )
+    }
+  }
+
+  ReactDOM.render(
+      <div>
+        <ChessGame/>
+      </div>,
+      document.getElementById('chess-game')
+  );
+</script>
+</body>
+</html>
