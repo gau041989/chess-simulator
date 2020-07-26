@@ -1,13 +1,13 @@
-package com.gp.chess.movement;
+package com.gp.chess.domain.movement;
 
-import static com.gp.chess.Color.BLACK;
-import static com.gp.chess.Color.WHITE;
-import static com.gp.chess.Row.SEVEN;
-import static com.gp.chess.Row.TWO;
+import static com.gp.chess.domain.cell.Row.SEVEN;
+import static com.gp.chess.domain.cell.Row.TWO;
+import static com.gp.chess.domain.character.Color.BLACK;
+import static com.gp.chess.domain.character.Color.WHITE;
 import static java.util.Collections.emptyList;
 
-import com.gp.chess.Piece;
-import com.gp.chess.Position;
+import com.gp.chess.domain.cell.Position;
+import com.gp.chess.domain.character.Piece;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;

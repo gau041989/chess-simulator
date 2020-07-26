@@ -1,4 +1,4 @@
-package com.gp.chess;
+package com.gp.chess.domain.character;
 
 public enum Color {
   BLACK,

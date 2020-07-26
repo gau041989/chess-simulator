@@ -1,22 +1,22 @@
-package com.gp.chess.movement;
+package com.gp.chess.domain.movement;
 
-import static com.gp.chess.Color.BLACK;
-import static com.gp.chess.Column.C;
-import static com.gp.chess.Column.D;
-import static com.gp.chess.Column.E;
-import static com.gp.chess.PieceType.KING;
-import static com.gp.chess.Row.FIVE;
-import static com.gp.chess.Row.FOUR;
-import static com.gp.chess.Row.SIX;
-import static com.gp.chess.movement.Mocks.canKillFn;
-import static com.gp.chess.movement.Mocks.canOccupyFn;
-import static com.gp.chess.movement.Mocks.canOccupyPositionsFn;
-import static com.gp.chess.movement.Mocks.cantKillPositionsFn;
+import static com.gp.chess.domain.cell.Column.C;
+import static com.gp.chess.domain.cell.Column.D;
+import static com.gp.chess.domain.cell.Column.E;
+import static com.gp.chess.domain.cell.Row.FIVE;
+import static com.gp.chess.domain.cell.Row.FOUR;
+import static com.gp.chess.domain.cell.Row.SIX;
+import static com.gp.chess.domain.character.Color.BLACK;
+import static com.gp.chess.domain.character.PieceType.KING;
+import static com.gp.chess.domain.movement.Mocks.canKillFn;
+import static com.gp.chess.domain.movement.Mocks.canOccupyFn;
+import static com.gp.chess.domain.movement.Mocks.canOccupyPositionsFn;
+import static com.gp.chess.domain.movement.Mocks.cantKillPositionsFn;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.gp.chess.Piece;
-import com.gp.chess.Position;
+import com.gp.chess.domain.cell.Position;
+import com.gp.chess.domain.character.Piece;
 import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;

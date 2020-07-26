@@ -1,10 +1,10 @@
-package com.gp.chess.movement;
+package com.gp.chess.domain.movement;
 
-import com.gp.chess.Column;
-import com.gp.chess.Piece;
-import com.gp.chess.Position;
-import com.gp.chess.Row;
-import com.gp.chess.Traversal;
+import com.gp.chess.domain.cell.Column;
+import com.gp.chess.domain.cell.Position;
+import com.gp.chess.domain.cell.Row;
+import com.gp.chess.domain.cell.Traversal;
+import com.gp.chess.domain.character.Piece;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

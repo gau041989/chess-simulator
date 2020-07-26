@@ -1,7 +1,7 @@
-package com.gp.chess.movement;
+package com.gp.chess.domain.movement;
 
-import com.gp.chess.Piece;
-import com.gp.chess.Position;
+import com.gp.chess.domain.cell.Position;
+import com.gp.chess.domain.character.Piece;
 import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;

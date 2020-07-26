@@ -1,7 +1,6 @@
 package com.gp.chess;
 
-import java.util.Collections;
-import java.util.List;
+import com.gp.chess.domain.Board;
 
 public class Game {
 

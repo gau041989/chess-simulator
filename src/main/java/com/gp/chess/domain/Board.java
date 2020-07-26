@@ -1,12 +1,15 @@
-package com.gp.chess;
+package com.gp.chess.domain;
 
-import com.gp.chess.movement.BishopMovementStrategy;
-import com.gp.chess.movement.KingMovementStrategy;
-import com.gp.chess.movement.KnightMovementStrategy;
-import com.gp.chess.movement.MovementStrategy;
-import com.gp.chess.movement.PawnMovementStrategy;
-import com.gp.chess.movement.QueenMovementStrategy;
-import com.gp.chess.movement.RookMovementStrategy;
+import com.gp.chess.domain.cell.Position;
+import com.gp.chess.domain.character.Piece;
+import com.gp.chess.domain.character.PieceType;
+import com.gp.chess.domain.movement.BishopMovementStrategy;
+import com.gp.chess.domain.movement.KingMovementStrategy;
+import com.gp.chess.domain.movement.KnightMovementStrategy;
+import com.gp.chess.domain.movement.MovementStrategy;
+import com.gp.chess.domain.movement.PawnMovementStrategy;
+import com.gp.chess.domain.movement.QueenMovementStrategy;
+import com.gp.chess.domain.movement.RookMovementStrategy;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
