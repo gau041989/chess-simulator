@@ -1,7 +1,9 @@
 package com.gp.chess.api;
 
+import static com.gp.chess.domain.cell.Position.from;
 import static java.util.stream.Collectors.toList;
 
+import com.gp.chess.api.request.Move;
 import com.gp.chess.api.response.GameData;
 import com.gp.chess.api.response.Piece;
 import com.gp.chess.domain.GameFacade;
@@ -23,8 +25,19 @@ public class GameService {
   }
 
   public GameData getGameData() {
-    Map<String, Piece> board = gameFacade
-        .getPiecePositions()
+    Map<Position, com.gp.chess.domain.character.Piece> piecePositions = gameFacade
+        .getPiecePositions();
+    return toGameData(piecePositions);
+  }
+
+  public GameData makeAMove(Move move) {
+    Map<Position, com.gp.chess.domain.character.Piece> piecePositions =
+        gameFacade.movePieceFrom(from(move.getSource()), from(move.getDestination()));
+    return toGameData(piecePositions);
+  }
+
+  private GameData toGameData(Map<Position, com.gp.chess.domain.character.Piece> piecePositions) {
+    Map<String, Piece> board = piecePositions
         .entrySet()
         .stream()
         .collect(

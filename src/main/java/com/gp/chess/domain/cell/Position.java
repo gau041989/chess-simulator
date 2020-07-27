@@ -1,5 +1,6 @@
 package com.gp.chess.domain.cell;
 
+import com.gp.chess.domain.exception.InvalidPositionException;
 import java.util.Objects;
 
 public class Position {
@@ -17,6 +18,17 @@ public class Position {
 
   public Traversal<Row> getRow() {
     return row;
+  }
+
+  public static Position from(String position) {
+    try {
+      String source = position.toUpperCase();
+      Column sourceCol = Column.valueOf(String.valueOf(source.charAt(0)));
+      Row sourceRow = Row.fromValue(Integer.parseInt(String.valueOf(source.charAt(1))));
+      return new Position(sourceCol, sourceRow);
+    } catch (Exception e) {
+      throw new InvalidPositionException();
+    }
   }
 
   @Override

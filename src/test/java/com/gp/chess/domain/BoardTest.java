@@ -24,13 +24,16 @@ import static com.gp.chess.domain.character.PieceType.PAWN;
 import static com.gp.chess.domain.character.PieceType.QUEEN;
 import static com.gp.chess.domain.character.PieceType.ROOK;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.gp.chess.domain.Board.BoardBuilder;
 import com.gp.chess.domain.action.BoardAction;
 import com.gp.chess.domain.cell.Position;
 import com.gp.chess.domain.cell.Row;
 import com.gp.chess.domain.character.Piece;
+import com.gp.chess.domain.exception.InvalidMoveException;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 class BoardTest {
@@ -183,5 +186,33 @@ class BoardTest {
     assertThat(possibleMoves.contains(from(C, TWO, OCCUPY))).isTrue();
     assertThat(possibleMoves.contains(from(C, FOUR, OCCUPY))).isTrue();
     assertThat(possibleMoves.contains(from(D, FIVE, OCCUPY))).isTrue();
+  }
+
+  @Test
+  public void givenAValidMoveToOccupy_shouldMoveThePiece() {
+    Position pawnInitialPosition = new Position(D, Row.TWO);
+    Piece pawn = new Piece(WHITE, PAWN);
+    Board board = new BoardBuilder()
+        .withPiece(pawn, pawnInitialPosition)
+        .build();
+
+    Position to = new Position(D, THREE);
+    Map<Position, Piece> piecePositions = board.movePiece(pawnInitialPosition, to);
+
+    assertThat(piecePositions.containsKey(pawnInitialPosition)).isFalse();
+    assertThat(piecePositions.get(to)).isEqualTo(pawn);
+  }
+
+  @Test
+  public void givenAnInvalidValidMoveToOccupy_shouldThrow() {
+    Position pawnInitialPosition = new Position(D, Row.TWO);
+    Piece pawn = new Piece(WHITE, PAWN);
+    Board board = new BoardBuilder()
+        .withPiece(pawn, pawnInitialPosition)
+        .build();
+
+    Position to = new Position(B, THREE);
+    assertThatExceptionOfType(InvalidMoveException.class)
+        .isThrownBy(() -> board.movePiece(pawnInitialPosition, to));
   }
 }

@@ -1,9 +1,12 @@
 package com.gp.chess.domain;
 
+import static com.gp.chess.domain.action.ActionType.OCCUPY;
+
 import com.gp.chess.domain.action.BoardAction;
 import com.gp.chess.domain.cell.Position;
 import com.gp.chess.domain.character.Piece;
 import com.gp.chess.domain.character.PieceType;
+import com.gp.chess.domain.exception.InvalidMoveException;
 import com.gp.chess.domain.movement.BishopMovementStrategy;
 import com.gp.chess.domain.movement.KingMovementStrategy;
 import com.gp.chess.domain.movement.KnightMovementStrategy;
@@ -52,6 +55,24 @@ public class Board {
           .getPossibleMoves(piece, position);
     }
     return Collections.emptyList();
+  }
+
+  public Map<Position, Piece> movePiece(Position from, Position to) {
+    Piece piece = piecePositions.get(from);
+    List<BoardAction> possibleMoves = getPossibleMoves(piece, from);
+    return possibleMoves.stream()
+        .filter(ba -> ba.getPosition().equals(to))
+        .findFirst()
+        .map(boardAction -> movePiece(piece, from, boardAction))
+        .orElseThrow(InvalidMoveException::new);
+  }
+
+  private Map<Position, Piece> movePiece(Piece piece, Position from, BoardAction boardAction) {
+    if(boardAction.getActionType().equals(OCCUPY)) {
+      piecePositions.remove(from);
+      piecePositions.put(boardAction.getPosition(), piece);
+    }
+    return getPiecePositions();
   }
 
   Map<Position, Piece> getPiecePositions() {

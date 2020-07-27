@@ -90,4 +90,8 @@ public class GameFacade {
         .map(BoardAction::getPosition)
         .collect(toList());
   }
+
+  public Map<Position, Piece> movePieceFrom(Position from, Position to) {
+    return board.movePiece(from, to);
+  }
 }

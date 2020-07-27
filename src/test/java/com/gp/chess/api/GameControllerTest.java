@@ -1,11 +1,14 @@
 package com.gp.chess.api;
 
 import static java.util.Arrays.asList;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.gp.chess.api.request.Move;
 import com.gp.chess.api.response.GameData;
 import com.gp.chess.api.response.Piece;
 import com.gp.chess.domain.ChessGameApplication;
@@ -57,6 +60,37 @@ class GameControllerTest {
                 get("/v1/game")
                     .contentType(APPLICATION_JSON)
                     .accept(APPLICATION_JSON)
+            )
+            .andExpect(status().isOk())
+            .andReturn();
+
+    // then
+    var expectedResponse =
+        getResourceAsString("classpath:contracts/game-data.json");
+    var response = mvcResult.getResponse().getContentAsString();
+    JSONAssert.assertEquals(expectedResponse, response, JSONCompareMode.STRICT);
+  }
+
+  @Test
+  public void givenAValidMove_shouldGetGameState() throws Exception {
+    // given
+    given(gameService.makeAMove(any(Move.class)))
+        .willReturn(new GameData(
+            new HashMap<>() {{
+              put("A2", new Piece("WHITE", "PAWN", asList("A3", "A4")));
+            }})
+        );
+
+    // when
+    var request = getResourceAsString("classpath:contracts/make-a-move.json");
+
+    var mvcResult =
+        mockMvc
+            .perform(
+                post("/v1/game")
+                    .contentType(APPLICATION_JSON)
+                    .accept(APPLICATION_JSON)
+                    .content(request)
             )
             .andExpect(status().isOk())
             .andReturn();

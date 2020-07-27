@@ -2,6 +2,7 @@ package com.gp.chess.domain.cell;
 
 import static java.util.stream.Collectors.toMap;
 
+import com.gp.chess.domain.exception.InvalidPositionException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
@@ -43,6 +44,9 @@ public enum Row implements Traversal<Row> {
   }
 
   public static Row fromValue(int value) {
-    return LOOK_UP.get(value);
+    if(LOOK_UP.containsKey(value)) {
+      return LOOK_UP.get(value);
+    }
+    throw new InvalidPositionException();
   }
 }
