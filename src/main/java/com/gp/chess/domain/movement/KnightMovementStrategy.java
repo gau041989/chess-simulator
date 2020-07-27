@@ -13,7 +13,6 @@ import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class KnightMovementStrategy extends MovementStrategy {
 
@@ -24,9 +23,6 @@ public class KnightMovementStrategy extends MovementStrategy {
 
   @Override
   public List<Position> getPossibleMoves(Piece piece, Position position) {
-    BiFunction<Position, Traversal<Row>, Position> fromRow = (p, r) -> new Position(p.getColumn(), r);
-    BiFunction<Position, Traversal<Column>, Position> fromCol = (p, c) -> new Position(c, p.getRow());
-
     Traversal<Row> row = position.getRow();
     Traversal<Column> column = position.getColumn();
 
@@ -49,13 +45,6 @@ public class KnightMovementStrategy extends MovementStrategy {
     return getAvailablePositions(asList(move1, move2, move3, move4, move5, move6, move7, move8));
   }
 
-  private List<Position> getAvailablePositions(List<Optional<Position>> optionalPositions) {
-    return optionalPositions.stream()
-        .filter(Optional::isPresent)
-        .map(Optional::get)
-        .collect(Collectors.toList());
-  }
-
   private <T extends Traversal<T>> Optional<Traversal<T>> tryGet2Step(Position position,
       Function<Position, Optional<Traversal<T>>> traversalFn,
       BiFunction<Position, Traversal<T>, Position> fromTraversal) {
@@ -64,15 +53,5 @@ public class KnightMovementStrategy extends MovementStrategy {
       Position newPosition = fromTraversal.apply(position, t);
       return traversalFn.apply(newPosition);
     });
-  }
-
-  private Optional<Position> tryToGetPosition(Piece piece, Optional<Traversal<Row>> row, Optional<Traversal<Column>> col) {
-    if (row.isPresent() && col.isPresent()) {
-      Position candidate = new Position(col.get(), row.get());
-      if (canOccupy.test(candidate) || canKill.test(piece, candidate)) {
-        return Optional.of(candidate);
-      }
-    }
-    return Optional.empty();
   }
 }

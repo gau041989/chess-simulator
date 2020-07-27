@@ -1,8 +1,6 @@
 package com.gp.chess.domain.movement;
 
-import com.gp.chess.domain.cell.Column;
 import com.gp.chess.domain.cell.Position;
-import com.gp.chess.domain.cell.Row;
 import com.gp.chess.domain.cell.Traversal;
 import com.gp.chess.domain.character.Piece;
 import java.util.ArrayList;
@@ -21,9 +19,6 @@ public class RookMovementStrategy extends MovementStrategy {
 
   @Override
   public List<Position> getPossibleMoves(Piece piece, Position position) {
-    BiFunction<Position, Traversal<Row>, Position> fromRow = (p, r) -> new Position(p.getColumn(), r);
-    BiFunction<Position, Traversal<Column>, Position> fromCol = (p, c) -> new Position(c, p.getRow());
-
     List<Position> topMoves = getAvailableMoves(piece, position, p -> p.getRow().next(), fromRow, new ArrayList<>());
     List<Position> bottomMoves = getAvailableMoves(piece, position, p -> p.getRow().prev(), fromRow, new ArrayList<>());
     List<Position> leftMoves = getAvailableMoves(piece, position, p -> p.getColumn().prev(), fromCol,  new ArrayList<>());
