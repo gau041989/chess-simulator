@@ -15,9 +15,12 @@
     box-sizing: content-box;
     display: flex;
     flex-direction: column;
-    height: 40vw;
-    margin: 0 auto;
-    width: 40vw;
+    height: 45vw;
+    width: 45vw;
+  }
+
+  .killed-pieces {
+    margin: 10px;
   }
 
   .row {
@@ -83,13 +86,14 @@
           A8: {}, B8: {}, C8: {}, D8: {}, E8: {}, F8: {}, G8: {}, H8: {}
         },
         highlightedKeys: [],
-        selectedKey: undefined
+        selectedKey: undefined,
+        killedPieces: []
       };
     }
 
     repaint(json) {
       let state = {};
-      const {board} = json;
+      const {board, killedPieces} = json;
       for (let colIndex in columns) {
         for (let rowIndex in rows) {
           const key = columns[colIndex] + rows[rowIndex];
@@ -104,7 +108,8 @@
           ...state
         },
         highlightedKeys: [],
-        selectedKey: undefined
+        selectedKey: undefined,
+        killedPieces
       });
     }
 
@@ -149,41 +154,58 @@
     }
 
     render() {
-      const {board, highlightedKeys, selectedKey} = this.state;
+      const {board, highlightedKeys, selectedKey, killedPieces} = this.state;
 
       return (
-          <div className="chessboard">
-            {
-              rows.map(row => {
-                return (
-                    <div className="row" key={row}>
-                      {
-                        columns.map(col => {
-                          const key = col + row;
-                          const item = board[key];
-                          const boxStyle = selectedKey === key
-                              ? 'selected-box'
-                              : whiteBox.has(key)
-                                  ? 'white-box'
-                                  : 'black-box';
-                          const withHighlight = highlightedKeys.includes(key)
-                              ? `${boxStyle} highlighted-box`
-                              : boxStyle;
+          <div className="row">
 
-                          return (
-                              <div key={key} className={withHighlight} onClick={() => this.onClick(item, key)}>
-                                {
-                                  item.color && item.type
-                                  && (<img className="image-avatar" src={`images/${item.color}_${item.type}.svg`}/>)
-                                }
-                              </div>
-                          );
-                        })
-                      }
-                    </div>
-                );
-              })
-            }
+            <div className="chessboard">
+              {
+                rows.map(row => {
+                  return (
+                      <div className="row" key={row}>
+                        {
+                          columns.map(col => {
+                            const key = col + row;
+                            const item = board[key];
+                            const boxStyle = selectedKey === key
+                                ? 'selected-box'
+                                : whiteBox.has(key)
+                                    ? 'white-box'
+                                    : 'black-box';
+                            const withHighlight = highlightedKeys.includes(key)
+                                ? `${boxStyle} highlighted-box`
+                                : boxStyle;
+
+                            return (
+                                <div key={key} className={withHighlight} onClick={() => this.onClick(item, key)}>
+                                  {
+                                    item.color && item.type
+                                    && (<img className="image-avatar" src={`images/${item.color}_${item.type}.svg`}/>)
+                                  }
+                                </div>
+                            );
+                          })
+                        }
+                      </div>
+                  );
+                })
+              }
+            </div>
+            <div className="col killed-pieces">
+              <h4>Killed Pieces</h4>
+              {
+                killedPieces.map((p, index) => {
+                  return (
+                      <div key={index}>
+                        {
+                          (<img className="image-avatar" src={`images/${p.color}_${p.type}.svg`}/>)
+                        }
+                      </div>
+                  );
+                })
+              }
+            </div>
           </div>
       )
     }

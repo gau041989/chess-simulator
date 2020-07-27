@@ -1,6 +1,7 @@
 package com.gp.chess.api;
 
 import static com.gp.chess.domain.cell.Position.from;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 import com.gp.chess.api.request.Move;
@@ -27,17 +28,23 @@ public class GameService {
   public GameData getGameData() {
     Map<Position, com.gp.chess.domain.character.Piece> piecePositions = gameFacade
         .getPiecePositions();
-    return toGameData(piecePositions);
+    return new GameData(toState(piecePositions), toKilledPieces(gameFacade.getKilledPieces()));
   }
 
   public GameData makeAMove(Move move) {
     Map<Position, com.gp.chess.domain.character.Piece> piecePositions =
         gameFacade.movePieceFrom(from(move.getSource()), from(move.getDestination()));
-    return toGameData(piecePositions);
+    return new GameData(toState(piecePositions), toKilledPieces(gameFacade.getKilledPieces()));
   }
 
-  private GameData toGameData(Map<Position, com.gp.chess.domain.character.Piece> piecePositions) {
-    Map<String, Piece> board = piecePositions
+  private List<Piece> toKilledPieces(List<com.gp.chess.domain.character.Piece> killedDomainPieces) {
+    return killedDomainPieces.stream()
+        .map(p -> new Piece(p.getColor().name(), p.getPieceType().name(), emptyList()))
+        .collect(toList());
+  }
+
+  private Map<String, Piece> toState(Map<Position, com.gp.chess.domain.character.Piece> piecePositions) {
+    return piecePositions
         .entrySet()
         .stream()
         .collect(
@@ -53,6 +60,5 @@ public class GameService {
                 }
             )
         );
-    return new GameData(board);
   }
 }

@@ -9,5 +9,11 @@
       ]
     }
   },
-  "killedPieces": []
+  "killedPieces": [
+    {
+      "color": "BLACK",
+      "type": "PAWN",
+      "possibleMoves": []
+    }
+  ]
 }

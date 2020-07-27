@@ -204,6 +204,26 @@ class BoardTest {
   }
 
   @Test
+  public void givenAValidMoveToKill_shouldMoveThePiece() {
+    Position pawnInitialPosition = new Position(D, Row.TWO);
+    Piece pawn = new Piece(WHITE, PAWN);
+    Piece enemyRook = new Piece(BLACK, ROOK);
+    Board board = new BoardBuilder()
+        .withPiece(pawn, pawnInitialPosition)
+        .withPiece(enemyRook, new Position(E, THREE))
+        .build();
+
+    Position to = new Position(E, THREE);
+    Map<Position, Piece> piecePositions = board.movePiece(pawnInitialPosition, to);
+
+    assertThat(piecePositions.containsKey(pawnInitialPosition)).isFalse();
+    assertThat(piecePositions.get(to)).isEqualTo(pawn);
+    List<Piece> killedPieces = board.getKilledPieces();
+    assertThat(killedPieces.size()).isEqualTo(1);
+    assertThat(killedPieces.get(0)).isEqualTo(enemyRook);
+  }
+
+  @Test
   public void givenAnInvalidValidMoveToOccupy_shouldThrow() {
     Position pawnInitialPosition = new Position(D, Row.TWO);
     Piece pawn = new Piece(WHITE, PAWN);

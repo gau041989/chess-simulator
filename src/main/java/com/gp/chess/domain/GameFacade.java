@@ -94,4 +94,8 @@ public class GameFacade {
   public Map<Position, Piece> movePieceFrom(Position from, Position to) {
     return board.movePiece(from, to);
   }
+
+  public List<Piece> getKilledPieces() {
+    return board.getKilledPieces();
+  }
 }

@@ -1,6 +1,7 @@
 package com.gp.chess.api;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -15,6 +16,7 @@ import com.gp.chess.domain.ChessGameApplication;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,7 +52,7 @@ class GameControllerTest {
         .willReturn(new GameData(
             new HashMap<>() {{
               put("A2", new Piece("WHITE", "PAWN", asList("A3", "A4")));
-            }})
+            }}, new ArrayList<>())
         );
 
     // when
@@ -78,6 +80,9 @@ class GameControllerTest {
         .willReturn(new GameData(
             new HashMap<>() {{
               put("A2", new Piece("WHITE", "PAWN", asList("A3", "A4")));
+            }},
+            new ArrayList<>(){{
+              add(new Piece("BLACK", "PAWN", emptyList()));
             }})
         );
 
@@ -97,7 +102,7 @@ class GameControllerTest {
 
     // then
     var expectedResponse =
-        getResourceAsString("classpath:contracts/game-data.json");
+        getResourceAsString("classpath:contracts/game-data-with-killed-pieces.json");
     var response = mvcResult.getResponse().getContentAsString();
     JSONAssert.assertEquals(expectedResponse, response, JSONCompareMode.STRICT);
   }
