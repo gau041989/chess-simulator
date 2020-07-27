@@ -1,5 +1,9 @@
 package com.gp.chess.domain.movement;
 
+import static com.gp.chess.domain.action.ActionType.KILL;
+import static com.gp.chess.domain.action.ActionType.OCCUPY;
+
+import com.gp.chess.domain.action.BoardAction;
 import com.gp.chess.domain.cell.Column;
 import com.gp.chess.domain.cell.Position;
 import com.gp.chess.domain.cell.Row;
@@ -22,9 +26,9 @@ public abstract class MovementStrategy {
     this.canKill = canKill;
   }
 
-  public abstract List<Position> getPossibleMoves(Piece piece, Position position);
+  public abstract List<BoardAction> getPossibleMoves(Piece piece, Position position);
 
-  protected List<Position> getAvailablePositions(List<Optional<Position>> optionalPositions) {
+  protected List<BoardAction> getAvailableMoves(List<Optional<BoardAction>> optionalPositions) {
     return optionalPositions.stream()
         .filter(Optional::isPresent)
         .map(Optional::get)
@@ -35,11 +39,16 @@ public abstract class MovementStrategy {
 
   protected BiFunction<Position, Traversal<Column>, Position> fromCol = (p, c) -> new Position(c, p.getRow());
 
-  protected Optional<Position> tryToGetPosition(Piece piece, Optional<Traversal<Row>> row, Optional<Traversal<Column>> col) {
+  protected Optional<BoardAction> tryToMakeAMove(Piece piece, Optional<Traversal<Row>> row, Optional<Traversal<Column>> col) {
     if (row.isPresent() && col.isPresent()) {
       Position candidate = new Position(col.get(), row.get());
-      if (canOccupy.test(candidate) || canKill.test(piece, candidate)) {
-        return Optional.of(candidate);
+      boolean willOccupy = canOccupy.test(candidate);
+      boolean willKill = canKill.test(piece, candidate);
+      if (willOccupy || willKill) {
+        if (willOccupy) {
+          return Optional.of(new BoardAction(OCCUPY, candidate));
+        }
+        return Optional.of(new BoardAction(KILL, candidate));
       }
     }
     return Optional.empty();

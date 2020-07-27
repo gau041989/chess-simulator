@@ -1,5 +1,6 @@
 package com.gp.chess.domain.movement;
 
+import com.gp.chess.domain.action.BoardAction;
 import com.gp.chess.domain.cell.Position;
 import com.gp.chess.domain.character.Piece;
 import java.util.ArrayList;
@@ -22,9 +23,9 @@ public class QueenMovementStrategy extends MovementStrategy {
   }
 
   @Override
-  public List<Position> getPossibleMoves(Piece piece, Position position) {
-    List<Position> possibleDiagonalMoves = bishopMovementStrategy.getPossibleMoves(piece, position);
-    List<Position> possibleXYMoves = rookMovementStrategy.getPossibleMoves(piece, position);
+  public List<BoardAction> getPossibleMoves(Piece piece, Position position) {
+    List<BoardAction> possibleDiagonalMoves = bishopMovementStrategy.getPossibleMoves(piece, position);
+    List<BoardAction> possibleXYMoves = rookMovementStrategy.getPossibleMoves(piece, position);
 
     return new ArrayList<>(){{
       addAll(possibleDiagonalMoves);

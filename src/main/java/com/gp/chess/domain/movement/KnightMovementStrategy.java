@@ -2,6 +2,7 @@ package com.gp.chess.domain.movement;
 
 import static java.util.Arrays.asList;
 
+import com.gp.chess.domain.action.BoardAction;
 import com.gp.chess.domain.cell.Column;
 import com.gp.chess.domain.cell.Position;
 import com.gp.chess.domain.cell.Row;
@@ -22,27 +23,27 @@ public class KnightMovementStrategy extends MovementStrategy {
   }
 
   @Override
-  public List<Position> getPossibleMoves(Piece piece, Position position) {
+  public List<BoardAction> getPossibleMoves(Piece piece, Position position) {
     Traversal<Row> row = position.getRow();
     Traversal<Column> column = position.getColumn();
 
     Optional<Traversal<Row>> nextNextRow = tryGet2Step(position, p -> p.getRow().next(), fromRow);
-    Optional<Position> move1 = tryToGetPosition(piece, nextNextRow, column.next());
-    Optional<Position> move2 = tryToGetPosition(piece, nextNextRow, column.prev());
+    Optional<BoardAction> move1 = tryToMakeAMove(piece, nextNextRow, column.next());
+    Optional<BoardAction> move2 = tryToMakeAMove(piece, nextNextRow, column.prev());
 
     Optional<Traversal<Column>> nextNextCol = tryGet2Step(position, p -> p.getColumn().next(), fromCol);
-    Optional<Position> move3 = tryToGetPosition(piece, row.next(), nextNextCol);
-    Optional<Position> move4 = tryToGetPosition(piece, row.prev(), nextNextCol);
+    Optional<BoardAction> move3 = tryToMakeAMove(piece, row.next(), nextNextCol);
+    Optional<BoardAction> move4 = tryToMakeAMove(piece, row.prev(), nextNextCol);
 
     Optional<Traversal<Row>> prevPrevRow = tryGet2Step(position, p -> p.getRow().prev(), fromRow);
-    Optional<Position> move5 = tryToGetPosition(piece, prevPrevRow, column.next());
-    Optional<Position> move6 = tryToGetPosition(piece, prevPrevRow, column.prev());
+    Optional<BoardAction> move5 = tryToMakeAMove(piece, prevPrevRow, column.next());
+    Optional<BoardAction> move6 = tryToMakeAMove(piece, prevPrevRow, column.prev());
 
     Optional<Traversal<Column>> prevPrevCol = tryGet2Step(position, p -> p.getColumn().prev(), fromCol);
-    Optional<Position> move7 = tryToGetPosition(piece, row.next(), prevPrevCol);
-    Optional<Position> move8 = tryToGetPosition(piece, row.prev(), prevPrevCol);
+    Optional<BoardAction> move7 = tryToMakeAMove(piece, row.next(), prevPrevCol);
+    Optional<BoardAction> move8 = tryToMakeAMove(piece, row.prev(), prevPrevCol);
 
-    return getAvailablePositions(asList(move1, move2, move3, move4, move5, move6, move7, move8));
+    return getAvailableMoves(asList(move1, move2, move3, move4, move5, move6, move7, move8));
   }
 
   private <T extends Traversal<T>> Optional<Traversal<T>> tryGet2Step(Position position,

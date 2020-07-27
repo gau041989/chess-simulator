@@ -1,5 +1,8 @@
 package com.gp.chess.domain.movement;
 
+import static com.gp.chess.domain.action.ActionType.KILL;
+import static com.gp.chess.domain.action.ActionType.OCCUPY;
+import static com.gp.chess.domain.action.BoardAction.from;
 import static com.gp.chess.domain.cell.Column.C;
 import static com.gp.chess.domain.cell.Column.D;
 import static com.gp.chess.domain.cell.Column.E;
@@ -12,15 +15,20 @@ import static com.gp.chess.domain.cell.Row.TWO;
 import static com.gp.chess.domain.character.Color.BLACK;
 import static com.gp.chess.domain.character.Color.WHITE;
 import static com.gp.chess.domain.character.PieceType.PAWN;
+import static com.gp.chess.domain.movement.Mocks.canKillFn;
+import static com.gp.chess.domain.movement.Mocks.canOccupyFn;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.gp.chess.domain.action.BoardAction;
 import com.gp.chess.domain.cell.Position;
 import com.gp.chess.domain.character.Color;
 import com.gp.chess.domain.character.Piece;
 import java.util.List;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,64 +43,64 @@ class PawnMovementStrategyTest {
             "Empty Board -> Start of journey",
             WHITE,
             new Position(D, TWO),
-            true,
-            true,
-            asList(new Position(D, THREE), new Position(D, FOUR), new Position(C, THREE), new Position(E, THREE))
+            canOccupyFn.apply(true),
+            canKillFn.apply(false),
+            asList(from(D, THREE, OCCUPY), from(D, FOUR, OCCUPY))
         ),
         Arguments.of(
             "Filled Board -> Start of journey",
             WHITE,
             new Position(D, TWO),
-            false,
-            true,
-            asList(new Position(C, THREE), new Position(E, THREE))
+            canOccupyFn.apply(false),
+            canKillFn.apply(true),
+            asList(from(C, THREE, KILL), from(E, THREE, KILL))
         ),
         Arguments.of(
             "Empty Board -> Start of journey -> Friends around",
             WHITE,
             new Position(D, TWO),
-            true,
-            false,
-            asList(new Position(D, THREE), new Position(D, FOUR))
+            canOccupyFn.apply(true),
+            canKillFn.apply(false),
+            asList(from(D, THREE, OCCUPY), from(D, FOUR, OCCUPY))
         ),
         Arguments.of(
             "Filled Board -> Start of journey -> Friends around",
             WHITE,
             new Position(D, TWO),
-            false,
-            false,
+            canOccupyFn.apply(false),
+            canKillFn.apply(false),
             emptyList()
         ),
         Arguments.of(
             "Empty Board -> Middle of journey",
             WHITE,
             new Position(D, THREE),
-            true,
-            true,
-            asList(new Position(D, FOUR), new Position(C, FOUR), new Position(E, FOUR))
+            canOccupyFn.apply(true),
+            canKillFn.apply(false),
+            singletonList(from(D, FOUR, OCCUPY))
         ),
         Arguments.of(
             "Filled Board -> Middle of journey",
             WHITE,
             new Position(D, THREE),
-            false,
-            true,
-            asList(new Position(C, FOUR), new Position(E, FOUR))
+            canOccupyFn.apply(false),
+            canKillFn.apply(true),
+            asList(from(C, FOUR, KILL), from(E, FOUR, KILL))
         ),
         Arguments.of(
             "Empty Board -> Middle of journey -> Friends around",
             WHITE,
             new Position(D, THREE),
-            true,
-            false,
-            singletonList(new Position(D, FOUR))
+            canOccupyFn.apply(true),
+            canKillFn.apply(false),
+            singletonList(from(D, FOUR, OCCUPY))
         ),
         Arguments.of(
             "Filled Board -> Middle of journey -> Friends around",
             WHITE,
             new Position(D, THREE),
-            false,
-            false,
+            canOccupyFn.apply(false),
+            canKillFn.apply(false),
             emptyList()
         ),
         // Black pawns
@@ -100,64 +108,64 @@ class PawnMovementStrategyTest {
             "Empty Board -> Start of journey",
             BLACK,
             new Position(D, SEVEN),
-            true,
-            true,
-            asList(new Position(D, SIX), new Position(C, SIX), new Position(E, SIX), new Position(D, FIVE))
+            canOccupyFn.apply(true),
+            canKillFn.apply(false),
+            asList(from(D, SIX, OCCUPY), from(D, FIVE, OCCUPY))
         ),
         Arguments.of(
             "Filled Board -> Start of journey",
             BLACK,
             new Position(D, SEVEN),
-            false,
-            true,
-            asList(new Position(C, SIX), new Position(E, SIX))
+            canOccupyFn.apply(false),
+            canKillFn.apply(true),
+            asList(from(C, SIX, KILL), from(E, SIX, KILL))
         ),
         Arguments.of(
             "Empty Board -> Start of journey -> Friends around",
             BLACK,
             new Position(D, SEVEN),
-            true,
-            false,
-            asList(new Position(D, SIX), new Position(D, FIVE))
+            canOccupyFn.apply(true),
+            canKillFn.apply(false),
+            asList(from(D, SIX, OCCUPY), from(D, FIVE, OCCUPY))
         ),
         Arguments.of(
             "Filled Board -> Start of journey -> Friends around",
             BLACK,
             new Position(D, SEVEN),
-            false,
-            false,
+            canOccupyFn.apply(false),
+            canKillFn.apply(false),
             emptyList()
         ),
         Arguments.of(
             "Empty Board -> Middle of journey",
             BLACK,
             new Position(D, SIX),
-            true,
-            true,
-            asList(new Position(D, FIVE), new Position(C, FIVE), new Position(E, FIVE))
+            canOccupyFn.apply(true),
+            canKillFn.apply(false),
+            asList(from(D, FIVE, OCCUPY))
         ),
         Arguments.of(
             "Filled Board -> Middle of journey",
             BLACK,
             new Position(D, SIX),
-            false,
-            true,
-            asList(new Position(C, FIVE), new Position(E, FIVE))
+            canOccupyFn.apply(false),
+            canKillFn.apply(true),
+            asList(from(C, FIVE, KILL), from(E, FIVE, KILL))
         ),
         Arguments.of(
             "Empty Board -> Middle of journey -> Friends around",
             BLACK,
             new Position(D, SIX),
-            true,
-            false,
-            singletonList(new Position(D, FIVE))
+            canOccupyFn.apply(true),
+            canKillFn.apply(false),
+            singletonList(from(D, FIVE, OCCUPY))
         ),
         Arguments.of(
             "Filled Board -> Middle of journey -> Friends around",
             BLACK,
             new Position(D, SIX),
-            false,
-            false,
+            canOccupyFn.apply(false),
+            canKillFn.apply(false),
             emptyList()
         )
     );
@@ -166,11 +174,11 @@ class PawnMovementStrategyTest {
   @ParameterizedTest(name = "{1} pawn on {0}")
   @MethodSource("getData")
   @DisplayName("Pawn movement strategy")
-  public void givenAPawnPosition_shouldComputePossibleMoves(String scenario, Color color, Position position, boolean canOccupy,
-      boolean canKill, List<Position> expectedMoves) {
-    PawnMovementStrategy strategy = new PawnMovementStrategy(c -> canOccupy, (a, b) -> canKill);
+  public void givenAPawnPosition_shouldComputePossibleMoves(String scenario, Color color, Position position, Predicate<Position> canOccupy,
+      BiPredicate<Piece, Position> canKill, List<BoardAction> expectedMoves) {
+    PawnMovementStrategy strategy = new PawnMovementStrategy(canOccupy, canKill);
 
-    List<Position> possibleMoves = strategy.getPossibleMoves(new Piece(color, PAWN), position);
+    List<BoardAction> possibleMoves = strategy.getPossibleMoves(new Piece(color, PAWN), position);
 
     assertThat(possibleMoves.size()).isEqualTo(expectedMoves.size());
     expectedMoves.forEach(move -> assertThat(possibleMoves.contains(move)).isTrue());

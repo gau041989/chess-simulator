@@ -1,5 +1,8 @@
 package com.gp.chess.domain.movement;
 
+import static com.gp.chess.domain.action.ActionType.KILL;
+import static com.gp.chess.domain.action.ActionType.OCCUPY;
+import static com.gp.chess.domain.action.BoardAction.from;
 import static com.gp.chess.domain.cell.Column.A;
 import static com.gp.chess.domain.cell.Column.B;
 import static com.gp.chess.domain.cell.Column.C;
@@ -25,6 +28,7 @@ import static com.gp.chess.domain.movement.Mocks.cantKillPositionsFn;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.gp.chess.domain.action.BoardAction;
 import com.gp.chess.domain.cell.Position;
 import com.gp.chess.domain.character.Piece;
 import java.util.List;
@@ -48,10 +52,10 @@ class RookMovementStrategyTest {
             canOccupyFn.apply(true),
             canKillFn.apply(true),
             asList(
-                new Position(D, FIVE), new Position(D, SIX), new Position(D, SEVEN), new Position(D, EIGHT),
-                new Position(D, THREE), new Position(D, TWO), new Position(D, ONE),
-                new Position(C, FOUR), new Position(B, FOUR), new Position(A, FOUR),
-                new Position(E, FOUR), new Position(F, FOUR), new Position(G, FOUR), new Position(H, FOUR)
+                from(D, FIVE, OCCUPY), from(D, SIX, OCCUPY), from(D, SEVEN, OCCUPY), from(D, EIGHT, OCCUPY),
+                from(D, THREE, OCCUPY), from(D, TWO, OCCUPY), from(D, ONE, OCCUPY),
+                from(C, FOUR, OCCUPY), from(B, FOUR, OCCUPY), from(A, FOUR, OCCUPY),
+                from(E, FOUR, OCCUPY), from(F, FOUR, OCCUPY), from(G, FOUR, OCCUPY), from(H, FOUR, OCCUPY)
             )
         ),
         Arguments.of(
@@ -60,10 +64,10 @@ class RookMovementStrategyTest {
             canOccupyPositionsFn.apply(occupiedCells),
             canKillFn.apply(true),
             asList(
-                new Position(D, FIVE), new Position(D, SIX),
-                new Position(D, THREE), new Position(D, TWO),
-                new Position(C, FOUR), new Position(B, FOUR),
-                new Position(E, FOUR), new Position(F, FOUR), new Position(G, FOUR)
+                from(D, FIVE, OCCUPY), from(D, SIX, KILL),
+                from(D, THREE, OCCUPY), from(D, TWO, KILL),
+                from(C, FOUR, OCCUPY), from(B, FOUR, KILL),
+                from(E, FOUR, OCCUPY), from(F, FOUR, OCCUPY), from(G, FOUR, KILL)
             )
         ),
         Arguments.of(
@@ -72,10 +76,10 @@ class RookMovementStrategyTest {
             canOccupyPositionsFn.apply(occupiedCells),
             cantKillPositionsFn.apply(occupiedCells),
             asList(
-                new Position(D, FIVE),
-                new Position(D, THREE),
-                new Position(C, FOUR),
-                new Position(E, FOUR), new Position(F, FOUR)
+                from(D, FIVE, OCCUPY),
+                from(D, THREE, OCCUPY),
+                from(C, FOUR, OCCUPY),
+                from(E, FOUR, OCCUPY), from(F, FOUR, OCCUPY)
             )
         )
     );
@@ -85,10 +89,10 @@ class RookMovementStrategyTest {
   @MethodSource("getData")
   @DisplayName("Rook movement strategy")
   public void givenARookPosition_shouldComputePossibleMoves(String scenario, Position position, Predicate<Position> canOccupy,
-      BiPredicate<Piece, Position> canKill, List<Position> expectedMoves) {
+      BiPredicate<Piece, Position> canKill, List<BoardAction> expectedMoves) {
     RookMovementStrategy strategy = new RookMovementStrategy(canOccupy, canKill);
 
-    List<Position> possibleMoves = strategy.getPossibleMoves(new Piece(BLACK, ROOK), position);
+    List<BoardAction> possibleMoves = strategy.getPossibleMoves(new Piece(BLACK, ROOK), position);
 
     assertThat(possibleMoves.size()).isEqualTo(expectedMoves.size());
     expectedMoves.forEach(move -> assertThat(possibleMoves.contains(move)).isTrue());

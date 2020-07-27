@@ -1,5 +1,8 @@
 package com.gp.chess.domain.movement;
 
+import static com.gp.chess.domain.action.ActionType.KILL;
+import static com.gp.chess.domain.action.ActionType.OCCUPY;
+import static com.gp.chess.domain.action.BoardAction.from;
 import static com.gp.chess.domain.cell.Column.C;
 import static com.gp.chess.domain.cell.Column.D;
 import static com.gp.chess.domain.cell.Column.E;
@@ -19,6 +22,7 @@ import static com.gp.chess.domain.movement.Mocks.cantKillPositionsFn;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.gp.chess.domain.action.BoardAction;
 import com.gp.chess.domain.cell.Position;
 import com.gp.chess.domain.character.Piece;
 import java.util.List;
@@ -42,9 +46,9 @@ class KnightMovementStrategyTest {
             canOccupyFn.apply(true),
             canKillFn.apply(true),
             asList(
-                new Position(F, FIVE), new Position(G, FOUR), new Position(G, TWO),
-                new Position(F, ONE), new Position(D, ONE), new Position(C, TWO),
-                new Position(C, FOUR), new Position(D, FIVE)
+                from(F, FIVE, OCCUPY), from(G, FOUR, OCCUPY), from(G, TWO, OCCUPY),
+                from(F, ONE, OCCUPY), from(D, ONE, OCCUPY), from(C, TWO, OCCUPY),
+                from(C, FOUR, OCCUPY), from(D, FIVE, OCCUPY)
             )
         ),
         Arguments.of(
@@ -53,9 +57,9 @@ class KnightMovementStrategyTest {
             canOccupyPositionsFn.apply(occupiedCells),
             canKillFn.apply(true),
             asList(
-                new Position(F, FIVE), new Position(G, FOUR), new Position(G, TWO),
-                new Position(F, ONE), new Position(D, ONE), new Position(C, TWO),
-                new Position(C, FOUR), new Position(D, FIVE)
+                from(F, FIVE, KILL), from(G, FOUR, KILL), from(G, TWO, KILL),
+                from(F, ONE, KILL), from(D, ONE, OCCUPY), from(C, TWO, OCCUPY),
+                from(C, FOUR, OCCUPY), from(D, FIVE, OCCUPY)
             )
         ),
         Arguments.of(
@@ -64,8 +68,8 @@ class KnightMovementStrategyTest {
             canOccupyPositionsFn.apply(occupiedCells),
             cantKillPositionsFn.apply(occupiedCells),
             asList(
-                new Position(D, ONE), new Position(C, TWO),
-                new Position(C, FOUR), new Position(D, FIVE)
+                from(D, ONE, OCCUPY), from(C, TWO, OCCUPY),
+                from(C, FOUR, OCCUPY), from(D, FIVE, OCCUPY)
             )
         )
     );
@@ -75,10 +79,10 @@ class KnightMovementStrategyTest {
   @MethodSource("getData")
   @DisplayName("Knight movement strategy")
   public void givenAKnightPosition_shouldComputePossibleMoves(String scenario, Position position, Predicate<Position> canOccupy,
-      BiPredicate<Piece, Position> canKill, List<Position> expectedMoves) {
+      BiPredicate<Piece, Position> canKill, List<BoardAction> expectedMoves) {
     KnightMovementStrategy strategy = new KnightMovementStrategy(canOccupy, canKill);
 
-    List<Position> possibleMoves = strategy.getPossibleMoves(new Piece(BLACK, KNIGHT), position);
+    List<BoardAction> possibleMoves = strategy.getPossibleMoves(new Piece(BLACK, KNIGHT), position);
 
     assertThat(possibleMoves.size()).isEqualTo(expectedMoves.size());
     expectedMoves.forEach(move -> assertThat(possibleMoves.contains(move)).isTrue());

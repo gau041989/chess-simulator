@@ -20,8 +20,10 @@ import static com.gp.chess.domain.character.PieceType.KNIGHT;
 import static com.gp.chess.domain.character.PieceType.PAWN;
 import static com.gp.chess.domain.character.PieceType.QUEEN;
 import static com.gp.chess.domain.character.PieceType.ROOK;
+import static java.util.stream.Collectors.toList;
 
 import com.gp.chess.domain.Board.BoardBuilder;
+import com.gp.chess.domain.action.BoardAction;
 import com.gp.chess.domain.cell.Position;
 import com.gp.chess.domain.character.Piece;
 import java.util.List;
@@ -83,6 +85,9 @@ public class GameFacade {
   }
 
   public List<Position> getPossibleMoves(Piece piece, Position position) {
-    return board.getPossibleMoves(piece, position);
+    return board.getPossibleMoves(piece, position)
+        .stream()
+        .map(BoardAction::getPosition)
+        .collect(toList());
   }
 }

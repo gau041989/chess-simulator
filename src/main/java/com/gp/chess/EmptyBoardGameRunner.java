@@ -2,8 +2,10 @@ package com.gp.chess;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.String.valueOf;
+import static java.util.stream.Collectors.toList;
 
 import com.gp.chess.domain.Board.BoardBuilder;
+import com.gp.chess.domain.action.BoardAction;
 import com.gp.chess.domain.cell.Column;
 import com.gp.chess.domain.cell.Position;
 import com.gp.chess.domain.cell.Row;
@@ -35,7 +37,10 @@ public class EmptyBoardGameRunner {
       List<Position> possibleMoves = new BoardBuilder()
           .withPiece(piece, position)
           .build()
-          .getPossibleMoves(piece, position);
+          .getPossibleMoves(piece, position)
+          .stream()
+          .map(BoardAction::getPosition)
+          .collect(toList());
       System.out.println(possibleMoves);
     }
   }

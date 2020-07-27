@@ -1,5 +1,6 @@
 package com.gp.chess.domain;
 
+import com.gp.chess.domain.action.BoardAction;
 import com.gp.chess.domain.cell.Position;
 import com.gp.chess.domain.character.Piece;
 import com.gp.chess.domain.character.PieceType;
@@ -43,7 +44,7 @@ public class Board {
     }};
   }
 
-  public List<Position> getPossibleMoves(Piece piece, Position position) {
+  public List<BoardAction> getPossibleMoves(Piece piece, Position position) {
     Piece actualPiece = piecePositions.get(position);
     if (actualPiece.equals(piece)) {
       return pieceMovementStrategies

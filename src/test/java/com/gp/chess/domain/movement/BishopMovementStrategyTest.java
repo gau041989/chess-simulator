@@ -1,5 +1,8 @@
 package com.gp.chess.domain.movement;
 
+import static com.gp.chess.domain.action.ActionType.KILL;
+import static com.gp.chess.domain.action.ActionType.OCCUPY;
+import static com.gp.chess.domain.action.BoardAction.from;
 import static com.gp.chess.domain.cell.Column.A;
 import static com.gp.chess.domain.cell.Column.B;
 import static com.gp.chess.domain.cell.Column.C;
@@ -25,6 +28,7 @@ import static com.gp.chess.domain.movement.Mocks.cantKillPositionsFn;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.gp.chess.domain.action.BoardAction;
 import com.gp.chess.domain.cell.Position;
 import com.gp.chess.domain.character.Piece;
 import java.util.List;
@@ -49,10 +53,10 @@ class BishopMovementStrategyTest {
             canOccupyFn.apply(true),
             canKillFn.apply(true),
             asList(
-                new Position(E, FIVE), new Position(F, SIX), new Position(G, SEVEN), new Position(H, EIGHT),
-                new Position(C, THREE), new Position(B, TWO), new Position(A, ONE),
-                new Position(C, FIVE), new Position(B, SIX), new Position(A, SEVEN),
-                new Position(E, THREE), new Position(F, TWO), new Position(G, ONE)
+                from(E, FIVE, OCCUPY), from(F, SIX, OCCUPY), from(G, SEVEN, OCCUPY), from(H, EIGHT, OCCUPY),
+                from(C, THREE, OCCUPY), from(B, TWO, OCCUPY), from(A, ONE, OCCUPY),
+                from(C, FIVE, OCCUPY), from(B, SIX, OCCUPY), from(A, SEVEN, OCCUPY),
+                from(E, THREE, OCCUPY), from(F, TWO, OCCUPY), from(G, ONE, OCCUPY)
             )
         ),
         Arguments.of(
@@ -61,10 +65,10 @@ class BishopMovementStrategyTest {
             canOccupyPositionsFn.apply(occupiedCells),
             canKillFn.apply(true),
             asList(
-                new Position(E, FIVE), new Position(F, SIX), new Position(G, SEVEN),
-                new Position(C, THREE), new Position(B, TWO),
-                new Position(C, FIVE), new Position(B, SIX),
-                new Position(E, THREE), new Position(F, TWO)
+                from(E, FIVE, OCCUPY), from(F, SIX, OCCUPY), from(G, SEVEN, KILL),
+                from(C, THREE, OCCUPY), from(B, TWO, KILL),
+                from(C, FIVE, OCCUPY), from(B, SIX, KILL),
+                from(E, THREE, OCCUPY), from(F, TWO, KILL)
             )
         ),
         Arguments.of(
@@ -73,10 +77,10 @@ class BishopMovementStrategyTest {
             canOccupyPositionsFn.apply(occupiedCells),
             cantKillPositionsFn.apply(occupiedCells),
             asList(
-                new Position(E, FIVE), new Position(F, SIX),
-                new Position(C, THREE),
-                new Position(C, FIVE),
-                new Position(E, THREE)
+                from(E, FIVE, OCCUPY), from(F, SIX, OCCUPY),
+                from(C, THREE, OCCUPY),
+                from(C, FIVE, OCCUPY),
+                from(E, THREE, OCCUPY)
             )
         )
     );
@@ -86,10 +90,10 @@ class BishopMovementStrategyTest {
   @MethodSource("getData")
   @DisplayName("Bishop movement strategy")
   public void givenABishopPosition_shouldComputePossibleMoves(String scenario, Position position, Predicate<Position> canOccupy,
-      BiPredicate<Piece, Position> canKill, List<Position> expectedMoves) {
+      BiPredicate<Piece, Position> canKill, List<BoardAction> expectedMoves) {
     BishopMovementStrategy strategy = new BishopMovementStrategy(canOccupy, canKill);
 
-    List<Position> possibleMoves = strategy.getPossibleMoves(new Piece(WHITE, BISHOP), position);
+    List<BoardAction> possibleMoves = strategy.getPossibleMoves(new Piece(WHITE, BISHOP), position);
 
     assertThat(possibleMoves.size()).isEqualTo(expectedMoves.size());
     expectedMoves.forEach(move -> assertThat(possibleMoves.contains(move)).isTrue());

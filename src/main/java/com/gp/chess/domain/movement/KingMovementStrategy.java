@@ -2,6 +2,7 @@ package com.gp.chess.domain.movement;
 
 import static java.util.Arrays.asList;
 
+import com.gp.chess.domain.action.BoardAction;
 import com.gp.chess.domain.cell.Position;
 import com.gp.chess.domain.character.Piece;
 import java.util.List;
@@ -17,17 +18,17 @@ public class KingMovementStrategy extends MovementStrategy {
   }
 
   @Override
-  public List<Position> getPossibleMoves(Piece piece, Position position) {
-    Optional<Position> nextOp = tryToGetPosition(piece, position.getRow().next(), Optional.of(position.getColumn()));
-    Optional<Position> prevOp = tryToGetPosition(piece, position.getRow().prev(), Optional.of(position.getColumn()));
-    Optional<Position> leftOp = tryToGetPosition(piece, Optional.of(position.getRow()), position.getColumn().prev());
-    Optional<Position> rightOp = tryToGetPosition(piece, Optional.of(position.getRow()), position.getColumn().next());
-    Optional<Position> rightUpDiagOp = tryToGetPosition(piece, position.getRow().next(), position.getColumn().next());
-    Optional<Position> rightDownDiagOp = tryToGetPosition(piece, position.getRow().prev(), position.getColumn().prev());
-    Optional<Position> leftUpDiagOp = tryToGetPosition(piece, position.getRow().next(), position.getColumn().prev());
-    Optional<Position> leftDownDiagOp = tryToGetPosition(piece, position.getRow().prev(), position.getColumn().next());
+  public List<BoardAction> getPossibleMoves(Piece piece, Position position) {
+    Optional<BoardAction> nextOp = tryToMakeAMove(piece, position.getRow().next(), Optional.of(position.getColumn()));
+    Optional<BoardAction> prevOp = tryToMakeAMove(piece, position.getRow().prev(), Optional.of(position.getColumn()));
+    Optional<BoardAction> leftOp = tryToMakeAMove(piece, Optional.of(position.getRow()), position.getColumn().prev());
+    Optional<BoardAction> rightOp = tryToMakeAMove(piece, Optional.of(position.getRow()), position.getColumn().next());
+    Optional<BoardAction> rightUpDiagOp = tryToMakeAMove(piece, position.getRow().next(), position.getColumn().next());
+    Optional<BoardAction> rightDownDiagOp = tryToMakeAMove(piece, position.getRow().prev(), position.getColumn().prev());
+    Optional<BoardAction> leftUpDiagOp = tryToMakeAMove(piece, position.getRow().next(), position.getColumn().prev());
+    Optional<BoardAction> leftDownDiagOp = tryToMakeAMove(piece, position.getRow().prev(), position.getColumn().next());
 
-    return getAvailablePositions(asList(nextOp, prevOp, leftOp, rightOp, rightUpDiagOp, rightDownDiagOp,
+    return getAvailableMoves(asList(nextOp, prevOp, leftOp, rightOp, rightUpDiagOp, rightDownDiagOp,
         leftUpDiagOp, leftDownDiagOp));
   }
 }

@@ -1,5 +1,8 @@
 package com.gp.chess.domain;
 
+import static com.gp.chess.domain.action.ActionType.KILL;
+import static com.gp.chess.domain.action.ActionType.OCCUPY;
+import static com.gp.chess.domain.action.BoardAction.from;
 import static com.gp.chess.domain.cell.Column.B;
 import static com.gp.chess.domain.cell.Column.C;
 import static com.gp.chess.domain.cell.Column.D;
@@ -23,6 +26,7 @@ import static com.gp.chess.domain.character.PieceType.ROOK;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.gp.chess.domain.Board.BoardBuilder;
+import com.gp.chess.domain.action.BoardAction;
 import com.gp.chess.domain.cell.Position;
 import com.gp.chess.domain.cell.Row;
 import com.gp.chess.domain.character.Piece;
@@ -41,13 +45,13 @@ class BoardTest {
         .withPiece(new Piece(BLACK, BISHOP), new Position(E, THREE))
         .build();
 
-    List<Position> possibleMoves = board.getPossibleMoves(pawn, pawnInitialPosition);
+    List<BoardAction> possibleMoves = board.getPossibleMoves(pawn, pawnInitialPosition);
 
     assertThat(possibleMoves.size()).isEqualTo(4);
-    assertThat(possibleMoves.contains(new Position(D, THREE))).isTrue();
-    assertThat(possibleMoves.contains(new Position(D, FOUR))).isTrue();
-    assertThat(possibleMoves.contains(new Position(C, THREE))).isTrue();
-    assertThat(possibleMoves.contains(new Position(E, THREE))).isTrue();
+    assertThat(possibleMoves.contains(from(D, THREE, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(D, FOUR, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(C, THREE, KILL))).isTrue();
+    assertThat(possibleMoves.contains(from(E, THREE, KILL))).isTrue();
   }
 
   @Test
@@ -62,16 +66,16 @@ class BoardTest {
         .withPiece(new Piece(WHITE, QUEEN), new Position(G, FOUR))
         .build();
 
-    List<Position> possibleMoves = board.getPossibleMoves(rook, initialPosition);
+    List<BoardAction> possibleMoves = board.getPossibleMoves(rook, initialPosition);
 
     assertThat(possibleMoves.size()).isEqualTo(7);
-    assertThat(possibleMoves.contains(new Position(D, FIVE))).isTrue();
-    assertThat(possibleMoves.contains(new Position(D, SIX))).isTrue();
-    assertThat(possibleMoves.contains(new Position(C, FOUR))).isTrue();
-    assertThat(possibleMoves.contains(new Position(B, FOUR))).isTrue();
-    assertThat(possibleMoves.contains(new Position(E, FOUR))).isTrue();
-    assertThat(possibleMoves.contains(new Position(F, FOUR))).isTrue();
-    assertThat(possibleMoves.contains(new Position(D, THREE))).isTrue();
+    assertThat(possibleMoves.contains(from(D, FIVE, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(D, SIX, KILL))).isTrue();
+    assertThat(possibleMoves.contains(from(C, FOUR, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(B, FOUR, KILL))).isTrue();
+    assertThat(possibleMoves.contains(from(E, FOUR, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(F, FOUR, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(D, THREE, OCCUPY))).isTrue();
   }
 
   @Test
@@ -86,15 +90,15 @@ class BoardTest {
         .withPiece(new Piece(WHITE, QUEEN), new Position(B, TWO))
         .build();
 
-    List<Position> possibleMoves = board.getPossibleMoves(bishop, initialPosition);
+    List<BoardAction> possibleMoves = board.getPossibleMoves(bishop, initialPosition);
 
     assertThat(possibleMoves.size()).isEqualTo(6);
-    assertThat(possibleMoves.contains(new Position(E, FIVE))).isTrue();
-    assertThat(possibleMoves.contains(new Position(F, SIX))).isTrue();
-    assertThat(possibleMoves.contains(new Position(C, FIVE))).isTrue();
-    assertThat(possibleMoves.contains(new Position(B, SIX))).isTrue();
-    assertThat(possibleMoves.contains(new Position(C, THREE))).isTrue();
-    assertThat(possibleMoves.contains(new Position(E, THREE))).isTrue();
+    assertThat(possibleMoves.contains(from(E, FIVE, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(F, SIX, KILL))).isTrue();
+    assertThat(possibleMoves.contains(from(C, FIVE, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(B, SIX, KILL))).isTrue();
+    assertThat(possibleMoves.contains(from(C, THREE, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(E, THREE, OCCUPY))).isTrue();
   }
 
   @Test
@@ -115,24 +119,24 @@ class BoardTest {
         .withPiece(new Piece(WHITE, KNIGHT), new Position(B, TWO))
         .build();
 
-    List<Position> possibleMoves = board.getPossibleMoves(queen, initialPosition);
+    List<BoardAction> possibleMoves = board.getPossibleMoves(queen, initialPosition);
 
     assertThat(possibleMoves.size()).isEqualTo(13);
     //rook
-    assertThat(possibleMoves.contains(new Position(D, FIVE))).isTrue();
-    assertThat(possibleMoves.contains(new Position(D, SIX))).isTrue();
-    assertThat(possibleMoves.contains(new Position(C, FOUR))).isTrue();
-    assertThat(possibleMoves.contains(new Position(B, FOUR))).isTrue();
-    assertThat(possibleMoves.contains(new Position(E, FOUR))).isTrue();
-    assertThat(possibleMoves.contains(new Position(F, FOUR))).isTrue();
-    assertThat(possibleMoves.contains(new Position(D, THREE))).isTrue();
+    assertThat(possibleMoves.contains(from(D, FIVE, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(D, SIX, KILL))).isTrue();
+    assertThat(possibleMoves.contains(from(C, FOUR, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(B, FOUR, KILL))).isTrue();
+    assertThat(possibleMoves.contains(from(E, FOUR, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(F, FOUR, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(D, THREE, OCCUPY))).isTrue();
     //bishop
-    assertThat(possibleMoves.contains(new Position(E, FIVE))).isTrue();
-    assertThat(possibleMoves.contains(new Position(F, SIX))).isTrue();
-    assertThat(possibleMoves.contains(new Position(C, FIVE))).isTrue();
-    assertThat(possibleMoves.contains(new Position(B, SIX))).isTrue();
-    assertThat(possibleMoves.contains(new Position(C, THREE))).isTrue();
-    assertThat(possibleMoves.contains(new Position(E, THREE))).isTrue();
+    assertThat(possibleMoves.contains(from(E, FIVE, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(F, SIX, KILL))).isTrue();
+    assertThat(possibleMoves.contains(from(C, FIVE, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(B, SIX, KILL))).isTrue();
+    assertThat(possibleMoves.contains(from(C, THREE, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(E, THREE, OCCUPY))).isTrue();
   }
 
   @Test
@@ -147,15 +151,15 @@ class BoardTest {
         .withPiece(new Piece(WHITE, QUEEN), new Position(E, FOUR))
         .build();
 
-    List<Position> possibleMoves = board.getPossibleMoves(king, initialPosition);
+    List<BoardAction> possibleMoves = board.getPossibleMoves(king, initialPosition);
 
     assertThat(possibleMoves.size()).isEqualTo(6);
-    assertThat(possibleMoves.contains(new Position(E, FIVE))).isTrue();
-    assertThat(possibleMoves.contains(new Position(E, SIX))).isTrue();
-    assertThat(possibleMoves.contains(new Position(D, SIX))).isTrue();
-    assertThat(possibleMoves.contains(new Position(C, FOUR))).isTrue();
-    assertThat(possibleMoves.contains(new Position(C, FIVE))).isTrue();
-    assertThat(possibleMoves.contains(new Position(C, SIX))).isTrue();
+    assertThat(possibleMoves.contains(from(E, FIVE, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(E, SIX, KILL))).isTrue();
+    assertThat(possibleMoves.contains(from(D, SIX, KILL))).isTrue();
+    assertThat(possibleMoves.contains(from(C, FOUR, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(C, FIVE, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(C, SIX, OCCUPY))).isTrue();
   }
 
   @Test
@@ -170,14 +174,14 @@ class BoardTest {
         .withPiece(new Piece(WHITE, QUEEN), new Position(F, ONE))
         .build();
 
-    List<Position> possibleMoves = board.getPossibleMoves(knight, initialPosition);
+    List<BoardAction> possibleMoves = board.getPossibleMoves(knight, initialPosition);
 
     assertThat(possibleMoves.size()).isEqualTo(6);
-    assertThat(possibleMoves.contains(new Position(F, FIVE))).isTrue();
-    assertThat(possibleMoves.contains(new Position(G, FOUR))).isTrue();
-    assertThat(possibleMoves.contains(new Position(D, ONE))).isTrue();
-    assertThat(possibleMoves.contains(new Position(C, TWO))).isTrue();
-    assertThat(possibleMoves.contains(new Position(C, FOUR))).isTrue();
-    assertThat(possibleMoves.contains(new Position(D, FIVE))).isTrue();
+    assertThat(possibleMoves.contains(from(F, FIVE, KILL))).isTrue();
+    assertThat(possibleMoves.contains(from(G, FOUR, KILL))).isTrue();
+    assertThat(possibleMoves.contains(from(D, ONE, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(C, TWO, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(C, FOUR, OCCUPY))).isTrue();
+    assertThat(possibleMoves.contains(from(D, FIVE, OCCUPY))).isTrue();
   }
 }

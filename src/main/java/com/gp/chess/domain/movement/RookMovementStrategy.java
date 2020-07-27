@@ -1,5 +1,7 @@
 package com.gp.chess.domain.movement;
 
+import com.gp.chess.domain.action.ActionType;
+import com.gp.chess.domain.action.BoardAction;
 import com.gp.chess.domain.cell.Position;
 import com.gp.chess.domain.cell.Traversal;
 import com.gp.chess.domain.character.Piece;
@@ -18,11 +20,11 @@ public class RookMovementStrategy extends MovementStrategy {
   }
 
   @Override
-  public List<Position> getPossibleMoves(Piece piece, Position position) {
-    List<Position> topMoves = getAvailableMoves(piece, position, p -> p.getRow().next(), fromRow, new ArrayList<>());
-    List<Position> bottomMoves = getAvailableMoves(piece, position, p -> p.getRow().prev(), fromRow, new ArrayList<>());
-    List<Position> leftMoves = getAvailableMoves(piece, position, p -> p.getColumn().prev(), fromCol,  new ArrayList<>());
-    List<Position> rightMoves = getAvailableMoves(piece, position, p -> p.getColumn().next(), fromCol, new ArrayList<>());
+  public List<BoardAction> getPossibleMoves(Piece piece, Position position) {
+    List<BoardAction> topMoves = getAvailableMoves(piece, position, p -> p.getRow().next(), fromRow, new ArrayList<>());
+    List<BoardAction> bottomMoves = getAvailableMoves(piece, position, p -> p.getRow().prev(), fromRow, new ArrayList<>());
+    List<BoardAction> leftMoves = getAvailableMoves(piece, position, p -> p.getColumn().prev(), fromCol,  new ArrayList<>());
+    List<BoardAction> rightMoves = getAvailableMoves(piece, position, p -> p.getColumn().next(), fromCol, new ArrayList<>());
 
     return new ArrayList<>() {{
       addAll(topMoves);
@@ -32,23 +34,23 @@ public class RookMovementStrategy extends MovementStrategy {
     }};
   }
 
-  private <T extends Traversal<T>> List<Position> getAvailableMoves(Piece piece, Position position,
+  private <T extends Traversal<T>> List<BoardAction> getAvailableMoves(Piece piece, Position position,
       Function<Position, Optional<Traversal<T>>> traversalFn,
       BiFunction<Position, Traversal<T>, Position> fromTraversal,
-      List<Position> intermediateMoves) {
+      List<BoardAction> intermediateMoves) {
     Optional<Traversal<T>> optionalTraversal = traversalFn.apply(position);
     if (optionalTraversal.isPresent()) {
       Position candidate = fromTraversal.apply(position, optionalTraversal.get());
       if (canOccupy.test(candidate)) {
-        List<Position> movesTillNow = new ArrayList<>() {{
+        List<BoardAction> movesTillNow = new ArrayList<>() {{
           addAll(intermediateMoves);
-          add(candidate);
+          add(new BoardAction(ActionType.OCCUPY, candidate));
         }};
         return getAvailableMoves(piece, candidate, traversalFn, fromTraversal, movesTillNow);
       } else if (canKill.test(piece, candidate)) {
         return new ArrayList<>() {{
           addAll(intermediateMoves);
-          add(candidate);
+          add(new BoardAction(ActionType.KILL, candidate));
         }};
       }
       return intermediateMoves;
