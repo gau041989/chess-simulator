@@ -1,4 +1,5 @@
 ###About
+A simple html simulator is available at http://localhost:8080
 
 ####Available pieces
 - ROOK
@@ -30,3 +31,7 @@ mvn clean package
 - mvn clean package
 - cd [project]/target
 - java -jar chess-1.0.0-SNAPSHOT.jar
+
+### Run
+- mvn clean spring-boot:run
+
